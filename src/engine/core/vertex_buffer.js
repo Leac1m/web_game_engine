@@ -1,5 +1,5 @@
 "use strict";
-import * as GL from "./gl.js";
+import * as glSys from "./gl.js";
 
 let mGLVertexBuffer = null;
 function get() { return mGLVertexBuffer; }
@@ -12,7 +12,7 @@ let mVerticesOfSquare = [
 ];
 
 function init() {
-    let gl = GL.get();
+    let gl = glSys.get();
 
     //Creating a buffer
     mGLVertexBuffer = gl.createBuffer();
