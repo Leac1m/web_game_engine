@@ -21,9 +21,9 @@ function initWebGL(htmlCanvasID) {
 }
 
 
-function drawSquare() {
+function drawSquare(color) {
     // Activate the shader
-    mShader.activate();
+    mShader.activate(color);
 
     // draw with the above settings
     mGL.drawArrays(mGL.TRIANGLE_STRIP, 0, 4);
@@ -33,7 +33,7 @@ function drawSquare() {
 function createShader() {
     mShader = new SimpleShader(
         "src/glsl_shaders/simple_vs.glsl",  // Path to VertexShader
-        "src/glsl_shaders/white_fs.glsl"    // Path to FragmentShader
+        "src/glsl_shaders/simple_fs.glsl"    // Path to FragmentShader
     );
 }
 

@@ -10,7 +10,7 @@ class MyGame {
         engine.clearCanvas([0, 0.8, 0, 1]);
 
         // Draw the square
-        engine.drawSquare();
+        engine.drawSquare([1, 0, 0, 1]);
     }
 }
 
