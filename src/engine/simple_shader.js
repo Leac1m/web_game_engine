@@ -1,5 +1,5 @@
-import * as core from './core.js';
-import * as vertexBuffer from './vertex_buffer.js';
+import * as GL from './core/gl.js';
+import * as vertexBuffer from './core/vertex_buffer.js';
 
 class SimpleShader {
     constructor(vertexShaderID, fragmentShaderID) {
@@ -7,7 +7,7 @@ class SimpleShader {
         this.mVertexPositionRef = null; // ref to VertexPostion in shader
         this.mPixelColorRef = null; // pixelColr uniform in the fragment shader
 
-        let gl = core.getGL();
+        let gl = GL.get();
         // load and compile vertex and fragment shaders
         this.mVertexShader = loadAndComplileShader(vertexShaderID, gl.VERTEX_SHADER);
         this.mFragmentShader = loadAndComplileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
@@ -32,7 +32,7 @@ class SimpleShader {
     }
 
     activate(pixelColor) {
-        let gl = core.getGL();
+        let gl = GL.get();
         gl.useProgram(this.mCompiledShader);
 
         // bind vertex buffer
@@ -53,7 +53,7 @@ class SimpleShader {
 
 function loadAndComplileShader(filePath, shaderType) {
     let xmlReq, shaderSource = null, compiledShader = null;
-    let gl = core.getGL();
+    let gl = GL.get();
 
     // Request the text from the the given file location.
     xmlReq = new XMLHttpRequest();
