@@ -6,6 +6,7 @@ class SimpleShader {
         this.mCompiledShader = null; // ref to compiled shader in webgl
         this.mVertexPositionRef = null; // ref to VertexPostion in shader
         this.mPixelColorRef = null; // pixelColr uniform in the fragment shader
+        this.mModelMatrixRef = null;
 
         let gl = glSys.get();
         // load and compile vertex and fragment shaders
@@ -29,9 +30,11 @@ class SimpleShader {
 
         // Gets uniform variable uPixelColor in fragment shader
         this.mPixelColorRef = gl.getUniformLocation(this.mCompiledShader, "uPixelColor");
+
+        this.mModelMatrixRef = gl.getUniformLocation(this.mCompiledShader, "uModelXformMatrix");
     }
 
-    activate(pixelColor) {
+    activate(pixelColor, trsMatrix) {
         let gl = glSys.get();
         gl.useProgram(this.mCompiledShader);
 
@@ -48,6 +51,7 @@ class SimpleShader {
 
         // load uniforms
         gl.uniform4fv(this.mPixelColorRef, pixelColor);
+        gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
     }
 }
 
