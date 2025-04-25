@@ -16,4 +16,4 @@ function clearCanvas(color) {
     gl.clear(gl.COLOR_BUFFER_BIT); // clear to the color set
 }
 
-export { init, clearCanvas, Renderable, Transform }
+export { init, clearCanvas, Renderable, Transform, glSys }

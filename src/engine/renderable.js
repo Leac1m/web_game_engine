@@ -10,9 +10,10 @@ class Renderable {
     }
 
     getXform() { return this.mXform }
-    draw() {
+    
+    draw(cameraMatrix) {
         let gl = glSys.get();
-        this.mShader.activate(this.mColor, this.mXform.getTRSMatrix());
+        this.mShader.activate(this.mColor, this.mXform.getTRSMatrix(), cameraMatrix);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
 
