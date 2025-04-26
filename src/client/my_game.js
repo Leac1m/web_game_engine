@@ -1,81 +1,70 @@
-"use strict";  // Operate in Strict mode such that variables must be declared before used!
+"use strict";  
 
-// import from engine internal is not desirable
-// we will define Camera class to hide this in the next project
-import * as glSys from "../engine/core/gl.js";
+import * as loop from '../engine/core/loop.js'
 import * as engine from '../engine/index.js';
 
 
-
 class MyGame {
-    constructor(htmlCanvasID) {
-        
-        // Initialize the game engine
-        engine.init(htmlCanvasID);
-        
+    constructor() {
+        this.mWhiteSq = null;
+        this.mRedSq = null;
+
+        this.mCamera = null;
+    }
+
+    init() {
         this.mCamera = new engine.Camera(
-            vec2.fromValues(20, 60), // center of the WC
-            20,                      // width of WC
-            [20, 40, 600, 300]       // viewport:orgX, orgY, W, H     
+            vec2.fromValues(20, 60),
+            20,
+            [20, 40, 600, 300]
         );
 
-        // create the Renderable objects
-        this.mBlueSq = new engine.Renderable();
-        this.mBlueSq.setColor([0.25, 0.25, 0.95, 1]);
+        this.mCamera.setBackground([0.8, 0.8, 0.8, 1]);
+
+        this.mWhiteSq = new engine.Renderable();
+        this.mWhiteSq.setColor([1, 1, 1, 1]);
         this.mRedSq = new engine.Renderable();
-        this.mRedSq.setColor([1, 0.25, 0.25, 1]);
-        this.mTLSq = new engine.Renderable();
-        this.mTLSq.setColor([0.9, 0.1, 0.1, 1]);
-        this.mTRSq = new engine.Renderable();
-        this.mTRSq.setColor([0.1, 0.9, 0.1, 1]);
-        this.mBRSq = new engine.Renderable();
-        this.mBRSq.setColor([0.1, 0.1, 0.9, 1]);
-        this.mBLSq = new engine.Renderable();
-        this.mBLSq.setColor([0.1, 0.1, 0.1, 1]);
+        this.mRedSq.setColor([1, 0, 0, 1]);
 
-        
-
-        // clear the canvas
-        engine.clearCanvas([0.9, 0.9, 0.9, 1]);
-
-        this.mCamera.setViewAndCameraMatrix();
-
-        let cameraCenter = vec2.fromValues(20, 60);
-        let wcSize = vec2.fromValues(20, 10);
-        let cameraMatrix = mat4.create();
-
-        mat4.scale(cameraMatrix, mat4.create(), vec3.fromValues(2.0/wcSize[0], 2.0/wcSize[1], 1.0));
-        mat4.translate(cameraMatrix, cameraMatrix, vec3.fromValues(-cameraCenter[0], -cameraCenter[1], 0));
-
-        this.mBlueSq.getXform().setPosition(20, 60);
-        this.mBlueSq.getXform().setRotationInRad(0.2);
-        this.mBlueSq.getXform().setSize(5, 5);
-        // Draw the square
-    
-        this.mBlueSq.draw(this.mCamera);
+        this.mWhiteSq.getXform().setPosition(20, 60);
+        this.mWhiteSq.getXform().setRotationInRad(0.2);
+        this.mWhiteSq.getXform().setSize(2, 2);
 
         this.mRedSq.getXform().setPosition(20, 60);
         this.mRedSq.getXform().setSize(2, 2);
+    }
+
+    draw() {
+        engine.clearCanvas([0.9, 0.9, 0.9, 1.0]);
+
+        this.mCamera.setViewAndCameraMatrix();
+
+        this.mWhiteSq.draw(this.mCamera);
+
         this.mRedSq.draw(this.mCamera);
+    }
 
-        // top left
-        this.mTLSq.getXform().setPosition(10, 65);
-        this.mTLSq.draw(this.mCamera);
+    update() {
+        let whiteXform = this.mWhiteSq.getXform();
+        let deltaX = 0.05;
 
-        // top  right
-        this.mTRSq.getXform().setPosition(30, 65);
-        this.mTRSq.draw(this.mCamera);
+        // Rotate the white square
+        if (whiteXform.getXPos() > 30) // the right-bound of the window
+            whiteXform.setPosition(10, 60);
+        whiteXform.incXPosBy(deltaX);
+        whiteXform.incRotationByDegree(1);
 
-        // bottom right
-        this.mBRSq.getXform().setPosition(30, 55);
-        this.mBRSq.draw(this.mCamera);
-
-        // bottom left
-        this.mBLSq.getXform().setPosition(10, 55);
-        this.mBLSq.draw(this.mCamera)
+        // pulse the red square
+        let redXform = this.mRedSq.getXform();
+        if (redXform.getWidth() > 5)
+            redXform.setSize(2, 2);
+        redXform.incSizeBy(0.05);
     }
 }
 
 window.onload = function() {
-    new MyGame('GLCanvas');
+    engine.init('GLCanvas')
+    let myGame = new MyGame();
+
+    loop.start(myGame)
 }
