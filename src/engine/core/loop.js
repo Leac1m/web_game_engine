@@ -1,4 +1,6 @@
 "use strict"
+import * as input from "../input.js";
+
 const kUPS = 60; // Updates per second
 const kMPF = 100 / kUPS; // Milliseconds per update.
 // Variable for timing gameloop.
@@ -29,6 +31,7 @@ function loopOnce() {
         //      Update only every kMPF (1/60 of a second)
         //      If lag larger then update frames, update untill caught up.
         while ((mLagTime >= kMPF) && mLoopRunning) {
+            input.update();
             mCurrentScene.update();
             mLagTime -= kMPF;
         }

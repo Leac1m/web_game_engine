@@ -45,7 +45,7 @@ class Transform {
     }
 
     incRotationByDegree(rotationInDegree) {
-        this.setRotationInRad(rotationInDegree * Math.PI / 180.0)
+        this.setRotationInRad(this.mRotationInRad + (rotationInDegree * Math.PI / 180.0))
     }
 
     incRotationByRad(deltaRad) {
