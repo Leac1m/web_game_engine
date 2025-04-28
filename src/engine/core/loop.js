@@ -1,5 +1,6 @@
 "use strict"
 import * as input from "../input.js";
+import * as map from './resource_map.js';
 
 const kUPS = 60; // Updates per second
 const kMPF = 100 / kUPS; // Milliseconds per update.
@@ -38,12 +39,15 @@ function loopOnce() {
     }
 }
 
-function start(scene) {
+async function start(scene) {
    
  if (mLoopRunning) {
         throw new Error("loop already running")
     }
 
+    // wait for any async requests before game-load
+    await map.waitOnPromise();
+    
     mCurrentScene = scene;
     mCurrentScene.init();
 

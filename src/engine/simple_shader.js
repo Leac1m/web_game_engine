@@ -1,8 +1,9 @@
 import * as glSys from './core/gl.js';
 import * as vertexBuffer from './core/vertex_buffer.js';
+import * as text from './resources/text.js';
 
 class SimpleShader {
-    constructor(vertexShaderID, fragmentShaderID) {
+    constructor(vertexShaderPath, fragmentShaderPath) {
         this.mCompiledShader = null; // ref to compiled shader in webgl
         this.mVertexPositionRef = null; // ref to VertexPostion in shader
         this.mPixelColorRef = null; // pixelColr uniform in the fragment shader
@@ -10,9 +11,9 @@ class SimpleShader {
         this.mCameraMatrixRef = null;
 
         let gl = glSys.get();
-        // load and compile vertex and fragment shaders
-        this.mVertexShader = loadAndComplileShader(vertexShaderID, gl.VERTEX_SHADER);
-        this.mFragmentShader = loadAndComplileShader(fragmentShaderID, gl.FRAGMENT_SHADER);
+        // compile vertex and fragment shaders
+        this.mVertexShader = complileShader(vertexShaderPath, gl.VERTEX_SHADER);
+        this.mFragmentShader = complileShader(fragmentShaderPath, gl.FRAGMENT_SHADER);
 
         // Create and link the shaders into a program.
         this.mCompiledShader = gl.createProgram();
@@ -59,28 +60,15 @@ class SimpleShader {
     }
 }
 
-function loadAndComplileShader(filePath, shaderType) {
-    let xmlReq, shaderSource = null, compiledShader = null;
+function complileShader(filePath, shaderType) {
+    let shaderSource = null, compiledShader = null;
     let gl = glSys.get();
 
-    // Request the text from the the given file location.
-    xmlReq = new XMLHttpRequest();
-    xmlReq.open('GET', filePath, false);
-    try {
-        xmlReq.send();
-    } catch (error) {
-        throw new Error("Failed to load shader: "
-            + filePath
-            + " [Hint: you cannot double click to run this project."
-            + "The index.html file must be loaded by a web-server.]"
-        );
-        return null;
-    }
-
-    shaderSource = xmlReq.responseText;
+    // Access the textfile
+    shaderSource = text.get(filePath);
 
     if (shaderSource === null) {
-        throw new Error("WARNING: Loading of:" + filePath + " Failed!");
+        throw new Error("WARNING:" + filePath + " not loaded!");
         return null;
     }
 
