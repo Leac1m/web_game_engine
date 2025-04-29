@@ -49,6 +49,9 @@ async function start(scene) {
     await map.waitOnPromise();
     
     mCurrentScene = scene;
+    mCurrentScene.load();
+
+    await map.waitOnPromise();
     mCurrentScene.init();
 
     mPrevTime = performance.now();

@@ -2,36 +2,25 @@
 
 import * as loop from '../engine/core/loop.js';
 import * as engine from '../engine/index.js';
+import SceneFileParser from './util/scene_file_parser.js';
 
 
 class MyGame {
     constructor() {
-        this.mWhiteSq = null;
-        this.mRedSq = null;
+        // this.mWhiteSq = null;
+        // this.mRedSq = null;
 
+        this.mSceneFile = "assets/scene.xml";
+        this.mSqset = [];
         this.mCamera = null;
     }
 
     init() {
-        this.mCamera = new engine.Camera(
-            vec2.fromValues(20, 60),
-            20,
-            [20, 40, 600, 300]
-        );
+        let sceneParse = new SceneFileParser(engine.xml.get(this.mSceneFile));
 
-        this.mCamera.setBackground([0.8, 0.8, 0.8, 1]);
+        this.mCamera = sceneParse.parseCamera();
 
-        this.mWhiteSq = new engine.Renderable();
-        this.mWhiteSq.setColor([1, 1, 1, 1]);
-        this.mRedSq = new engine.Renderable();
-        this.mRedSq.setColor([1, 0, 0, 1]);
-
-        this.mWhiteSq.getXform().setPosition(20, 60);
-        this.mWhiteSq.getXform().setRotationInRad(0.2);
-        this.mWhiteSq.getXform().setSize(2, 2);
-
-        this.mRedSq.getXform().setPosition(20, 60);
-        this.mRedSq.getXform().setSize(2, 2);
+        sceneParse.parseSquares(this.mSqset);
     }
 
     draw() {
@@ -39,31 +28,39 @@ class MyGame {
 
         this.mCamera.setViewAndCameraMatrix();
 
-        this.mWhiteSq.draw(this.mCamera);
-
-        this.mRedSq.draw(this.mCamera);
+        let i;
+        for (i = 0; i < this.mSqset.length; i++)
+            this.mSqset[i].draw(this.mCamera);
     }
 
     update() {
-        let whiteXform = this.mWhiteSq.getXform();
+        let xform = this.mSqset[0].getXform();
         let deltaX = 0.05;
 
         if (engine.input.isKeyPressed(engine.input.keys.Right)) {
-            if (whiteXform.getXPos() > 30)
-                whiteXform.setPosition(10, 60);
-            whiteXform.incXPosBy(deltaX);
+            if (xform.getXPos() > 30)
+                xform.setPosition(10, 60);
+            xform.incXPosBy(deltaX);
         }
 
         if (engine.input.isKeyClicked(engine.input.keys.Up))
-            whiteXform.incRotationByDegree(1);
+            xform.incRotationByDegree(1);
 
-        let redXform = this.mRedSq.getXform();
+        xform = this.mSqset[1].getXform();
         if (engine.input.isKeyPressed(engine.input.keys.Down)) {
-            if (redXform.getWidth() > 5)
-                redXform.setSize(2, 2);
+            if (xform.getWidth() > 5)
+                xform.setSize(2, 2);
 
-            redXform.incSizeBy(0.05);
+            xform.incSizeBy(0.05);
         }
+    }
+
+    load() {
+        engine.xml.load(this.mSceneFile);
+    }
+
+    unload() {
+        engine.xml.unload(this.mSceneFile);
     }
 }
 
