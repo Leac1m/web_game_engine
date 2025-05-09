@@ -5,9 +5,9 @@
  />
 
 <Square PosX="20" PosY="60" Width="5" Height="5"
-    Rotation="0" Color="0 0 1 1" />
+    Rotation="0" Color="1 0 0 1" />
 
 <Square PosX="20" PosY="60" Width="2" Height="3"
-    Rotation="0" Color="1 1 1 1" />
+    Rotation="0" Color="1 0 1 1" />
 
 </MyGameLevel>

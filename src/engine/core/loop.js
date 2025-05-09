@@ -66,4 +66,13 @@ function stop() {
     cancelAnimationFrame(mFrameID);
 }
 
-export {start, stop}
+function cleanUp() {
+    if ( mLoopRunning) {
+        stop();
+        // unload all resources
+        mCurrentScene.unload();
+        mCurrentScene = null;
+    }
+}
+
+export {start, stop, cleanUp}

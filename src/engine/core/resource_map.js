@@ -8,6 +8,7 @@ class MapEntry {
 
     incRef() { this.mRefCount++; }
 
+    set(data) { this.mData = data; }
     data() { return this.mData; }
 
     canRemove() { return (this.mRefCount == 0); }
@@ -21,10 +22,10 @@ function get(path) {
     if (!has(path)) {
         throw new Error("Error [" + path + "]: not laoded");
     }
-    return mMap.get(path);
+    return mMap.get(path).data();
 }
 
-function set(key, value) { mMap.set(key, value); }
+function set(key, value) { mMap.get(key).set(value); }
 
 function loadRequested(path) {
     mMap.set(path, new MapEntry(null));
@@ -39,7 +40,7 @@ function unload(path) {
     entry.decRef();
     if (entry.canRemove())
         mMap.delete(path);
-    return entry,canRemove();
+    return entry.canRemove();
 }
 
 function pushPromise(p) { mOutstandingPromises.push(p); }

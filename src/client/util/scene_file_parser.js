@@ -24,7 +24,7 @@ class SceneFileParser {
             w,                        // Width of camera
             viewport                  // viewport (orgX, orgY, width, height)
         );
-        cam.setBackground(bgColor);
+        cam.setBackgroundColor(bgColor);
         return cam;
     }
 

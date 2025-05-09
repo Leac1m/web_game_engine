@@ -58,6 +58,15 @@ class SimpleShader {
         gl.uniformMatrix4fv(this.mModelMatrixRef, false, trsMatrix);
         gl.uniformMatrix4fv(this.mCameraMatrixRef, false, cameraMatrix);
     }
+
+    cleanUp() {
+        let gl = glSys.get();
+        gl.detachShader(this.mCompiledShader, this.mVertexShader);
+        gl.detachShader(this.mCompiledShader, this.mFragmentShader);
+        gl.deleteShader(this.mVertexShader);
+        gl.deleteShader(this.mFragmentShader);
+        gl.deleteProgram(this.mCompiledShader);
+    }
 }
 
 function complileShader(filePath, shaderType) {

@@ -33,8 +33,8 @@ class Camera {
     setViewport(viewportArray) { this.mViewport = viewportArray; }
     getViewport() { return this.mViewport; }
 
-    setBackground(newColor) { this.mBGColor = newColor; }
-    getBackground() { return this.mBGColor; }
+    setBackgroundColor(newColor) { this.mBGColor = newColor; }
+    getBackgroundColor() { return this.mBGColor; }
 
     setViewAndCameraMatrix() {
         let gl = glSys.get();

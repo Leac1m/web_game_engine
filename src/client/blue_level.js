@@ -1,17 +1,14 @@
-"use strict";  
-
 import * as engine from '../engine/index.js';
-import BlueLevel from './blue_level.js';
 import SceneFileParser from './util/scene_file_parser.js';
+import MyGame from './my_game.js';
 
-
-class MyGame extends engine.Scene {
+class BlueLevel extends engine.Scene {
     constructor() {
         super();
         // this.mWhiteSq = null;
         // this.mRedSq = null;
 
-        this.mSceneFile = "assets/scene.xml";
+        this.mSceneFile = "assets/blue_level.xml";
         this.mSqset = [];
         this.mCamera = null;
     }
@@ -39,19 +36,19 @@ class MyGame extends engine.Scene {
         let deltaX = 0.05;
 
         if (engine.input.isKeyPressed(engine.input.keys.Right)) {
-            xform.incXPosBy(deltaX);
             if (xform.getXPos() > 30)
                 xform.setPosition(10, 60);
+            xform.incXPosBy(deltaX);
         }
+
+        if (engine.input.isKeyClicked(engine.input.keys.Up))
+            xform.incRotationByDegree(1);
 
         if (engine.input.isKeyPressed(engine.input.keys.Left)) {
             xform.incXPosBy(-deltaX);
             if (xform.getXPos() < 11)
                 this.next();
         }
-
-        if (engine.input.isKeyClicked(engine.input.keys.Up))
-            xform.incRotationByDegree(1);
 
         // xform = this.mSqset[1].getXform();
         // if (engine.input.isKeyPressed(engine.input.keys.Down)) {
@@ -69,7 +66,7 @@ class MyGame extends engine.Scene {
         super.next();
 
         // next scene to run
-        let nextLevel = new BlueLevel();
+        let nextLevel = new MyGame();
         nextLevel.start();
     }
 
@@ -82,11 +79,4 @@ class MyGame extends engine.Scene {
     }
 }
 
-export default MyGame;
-
-window.onload = function() {
-    engine.init('GLCanvas')
-    let myGame = new MyGame();
-
-    myGame.start()
-}
+export default BlueLevel;

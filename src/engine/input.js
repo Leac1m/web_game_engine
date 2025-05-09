@@ -79,4 +79,6 @@ function isKeyClicked(keyCode) {
     return mIsKeyClicked[keyCode];
 }
 
-export { keys, init, update, isKeyClicked, isKeyPressed }
+function cleanUp() {}
+
+export { keys, init, cleanUp, update, isKeyClicked, isKeyPressed }
