@@ -5,6 +5,7 @@ import * as input from "./input.js";
 import * as shaderResources from './core/shader_resources.js';
 import * as text from './resources/text.js';
 import * as xml from './resources/xml.js';
+import * as audio from './resources/audio.js';
 import Renderable from './renderable.js';
 import Scene from './scene.js';
 import Transform from './transform.js';
@@ -15,6 +16,7 @@ function init(htmlCanvasID) {
     vertexBuffer.init();
     shaderResources.init();
     input.init();
+    audio.init();
 }
 
 function clearCanvas(color) {
@@ -25,10 +27,11 @@ function clearCanvas(color) {
 
 function cleanUp() {
     loop.cleanUp();
+    audio.cleanUp();
     input.cleanUp();
     shaderResources.cleanUp();
     vertexBuffer.cleanUp();
     glSys.cleanUp();
 }
 
-export { text, xml, input, init, cleanUp, clearCanvas, Renderable, Transform, Camera, Scene }
+export { audio, text, xml, input, init, cleanUp, clearCanvas, Renderable, Transform, Camera, Scene }
