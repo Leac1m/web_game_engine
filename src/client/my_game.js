@@ -13,15 +13,32 @@ class MyGame extends engine.Scene {
         this.mBackgroundAudio = "assets/sounds/bg_clip.mp3";
         this.mCue = "assets/sounds/my_game_cue.wav";
 
+        // textures:
+        this.kPortal = "assets/minion_portal.png"; // supports png with transpareny
+        this.kCollector = "assets/minion_collector.png";
+
+
         this.mSceneFile = "assets/scene.xml";
         this.mSqset = [];
         this.mCamera = null;
+        this.mPortal = null;
+        this.mCollector = null;
     }
 
     init() {
         let sceneParse = new SceneFileParser(engine.xml.get(this.mSceneFile));
 
         this.mCamera = sceneParse.parseCamera();
+
+        this.mPortal = new engine.TextureRenderable(this.kPortal);
+        this.mPortal.setColor([1, 0, 0, 0.2]); // tints red
+        this.mPortal.getXform().setPosition(25, 60);
+        this.mPortal.getXform().setSize(3, 3);
+
+        this.mCollector = new engine.TextureRenderable(this.kCollector);
+        this.mCollector.setColor([0, 0, 0, 0]); // No tinting
+        this.mCollector.getXform().setPosition(15, 60);
+        this.mCollector.getXform().setSize(2, 3);
 
         sceneParse.parseSquares(this.mSqset);
 
@@ -33,9 +50,11 @@ class MyGame extends engine.Scene {
 
         this.mCamera.setViewAndCameraMatrix();
 
+        this.mPortal.draw(this.mCamera);
         let i;
         for (i = 0; i < this.mSqset.length; i++)
             this.mSqset[i].draw(this.mCamera);
+        this.mCollector.draw(this.mCamera);
     }
 
     update() {
@@ -71,6 +90,13 @@ class MyGame extends engine.Scene {
 
         if (engine.input.isKeyPressed(engine.input.keys.Q))
             this.stop();
+
+        let c = this.mPortal.getColor();
+        let ca = c[3] + deltaX;
+        if (ca > 1) {
+            ca = 0;
+        }
+        c[3] = ca;
     }
 
     next() {
@@ -85,7 +111,11 @@ class MyGame extends engine.Scene {
         engine.xml.load(this.mSceneFile);
         // loads the audios
         engine.audio.load(this.mBackgroundAudio);
-        engine.audio.load(this.mCue)
+        engine.audio.load(this.mCue);
+
+        // load the texture
+        engine.texture.load(this.kPortal);
+        engine.texture.load(this.kCollector);
     }
 
     unload() {
@@ -96,6 +126,10 @@ class MyGame extends engine.Scene {
         // unload the scene resource
         engine.audio.unload(this.mBackgroundAudio);
         engine.audio.unload(this.mCue);
+
+        // Game loop not running, unload all assets
+        engine.texture.unload(this.kPortal);
+        engine.texture.unload(this.kCollector);
     }
 }
 

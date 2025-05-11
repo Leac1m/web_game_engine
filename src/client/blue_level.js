@@ -10,6 +10,11 @@ class BlueLevel extends engine.Scene {
         this.mCue = "assets/sounds/blue_level_cue.wav";
 
         this.mSceneFile = "assets/blue_level.xml";
+
+        // textures: (Note: jpg does not support transparency)
+        this.kPortal = "assets/minion_portal.jpg";
+        this.kCollector = "assets/minion_collector.jpg";
+
         this.mSqset = [];
         this.mCamera = null;
     }
@@ -20,6 +25,7 @@ class BlueLevel extends engine.Scene {
         this.mCamera = sceneParse.parseCamera();
 
         sceneParse.parseSquares(this.mSqset);
+        sceneParse.parseTextureSquares(this.mSqset);
 
         // start Background music
         engine.audio.playBackground(this.mBackgroundAudio, 0.5);
@@ -64,6 +70,14 @@ class BlueLevel extends engine.Scene {
         //     xform.incSizeBy(0.05);
         // }
 
+        // continuously change texture tinting
+        let c = this.mSqset[1].getColor();
+        let ca = c[3] + deltaX;
+        if (ca > 1) {
+            ca = 0;
+        }
+        c[3] = ca;
+
         if (engine.input.isKeyPressed(engine.input.keys.Q))
             this.stop();
     }
@@ -77,7 +91,14 @@ class BlueLevel extends engine.Scene {
     }
 
     load() {
+        // scene 
         engine.xml.load(this.mSceneFile);
+
+        // textures
+        engine.texture.load(this.kPortal);
+        engine.texture.load(this.kCollector);
+
+        // audios
         engine.audio.load(this.mBackgroundAudio);
         engine.audio.load(this.mCue);
     }
@@ -89,6 +110,8 @@ class BlueLevel extends engine.Scene {
         // unload the scene file and loaded resourses
         engine.audio.unload(this.mBackgroundAudio);
         engine.xml.unload(this.mSceneFile);
+        engine.texture.unload(this.kPortal);
+        engine.texture.unload(this.kCollector);
     }
 }
 

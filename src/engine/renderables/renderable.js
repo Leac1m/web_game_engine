@@ -1,6 +1,6 @@
-import * as glSys from './core/gl.js';
-import * as shaderResources from './core/shader_resources.js';
-import Transform from './transform.js'
+import * as glSys from '../core/gl.js';
+import * as shaderResources from '../core/shader_resources.js';
+import Transform from '../transform.js'
 
 class Renderable {
     constructor() {
@@ -19,6 +19,9 @@ class Renderable {
 
     setColor(color) { this.mColor = color; }
     getColor() { return this.mColor; }
+
+    // funtion to set the shader for the Renderable
+    _setShader(s) { this.mShader = s; }
 
 }
 

@@ -11,12 +11,19 @@ function init(htmlCanvasID) {
         throw new Error("Engine init [" + htmlCanvasID + "] HTML element id not found");
 
     
-    mGL = mCanvas.getContext("webgl2") || mCanvas.getContext("experimental-webgl2");
+    mGL = mCanvas.getContext("webgl2", {alpha: false}) || mCanvas.getContext("experimental-webgl2", {alpha: false});
 
-    if (mGL == null) {
+    if (mGL === null) {
         document.writeln("<br><b>WebGL 2 is not supported!</b>");
         return;
     }
+
+    // Allows transparency with textures.
+    mGL.blendFunc(mGL.SRC_ALPHA, mGL.ONE_MINUS_SRC_ALPHA);
+    mGL.enable(mGL.BLEND);
+
+    // Set images to flip y axis to match the texture coordinate space.
+    mGL.pixelStorei(mGL.UNPACK_FLIP_Y_WEBGL, true);
 }
 
 function cleanUp() {

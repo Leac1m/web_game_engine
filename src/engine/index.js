@@ -3,10 +3,12 @@ import * as glSys from './core/gl.js';
 import * as loop from './core/loop.js';
 import * as input from "./input.js";
 import * as shaderResources from './core/shader_resources.js';
+import * as texture from './resources/texture.js';
 import * as text from './resources/text.js';
 import * as xml from './resources/xml.js';
 import * as audio from './resources/audio.js';
-import Renderable from './renderable.js';
+import Renderable from './renderables/renderable.js';
+import TextureRenderable from './renderables/texture_renderable.js';
 import Scene from './scene.js';
 import Transform from './transform.js';
 import Camera from './camera.js';
@@ -34,4 +36,18 @@ function cleanUp() {
     glSys.cleanUp();
 }
 
-export { audio, text, xml, input, init, cleanUp, clearCanvas, Renderable, Transform, Camera, Scene }
+export { 
+    // resource support
+    audio, text, xml, texture,
+    
+    // input support
+    input, 
+    
+    // functions
+    init, cleanUp, clearCanvas, 
+    
+    // Renderables
+    Renderable, TextureRenderable,
+    
+    // Util classes
+    Transform, Camera, Scene }
