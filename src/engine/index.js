@@ -7,8 +7,13 @@ import * as texture from './resources/texture.js';
 import * as text from './resources/text.js';
 import * as xml from './resources/xml.js';
 import * as audio from './resources/audio.js';
+// renderables
 import Renderable from './renderables/renderable.js';
 import TextureRenderable from './renderables/texture_renderable.js';
+import SpriteRenderable from './renderables/sprite_renderable.js';
+
+import { eTexCoordArrayIndex } from './renderables/sprite_renderable.js';
+
 import Scene from './scene.js';
 import Transform from './transform.js';
 import Camera from './camera.js';
@@ -47,7 +52,10 @@ export {
     init, cleanUp, clearCanvas, 
     
     // Renderables
-    Renderable, TextureRenderable,
+    Renderable, TextureRenderable, SpriteRenderable,
+
+    // constants
+    eTexCoordArrayIndex,
     
     // Util classes
     Transform, Camera, Scene }

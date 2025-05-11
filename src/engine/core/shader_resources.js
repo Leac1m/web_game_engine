@@ -4,6 +4,7 @@ import * as map from './resource_map.js';
 
 import TextureShader from '../shaders/texture_shader.js'
 import SimpleShader from "../shaders/simple_shader.js";
+import SpriteShader from '../shaders/sprite_shaders.js';
 
 // Simple Shader
 let kSimpleVS = "src/glsl_shaders/simple_vs.glsl"; // to VertexShader
@@ -19,9 +20,15 @@ let mTextureShader = null;
 
 function getTextureShader() { return mTextureShader; }
 
+// Sprite Shader
+let mSpriteShader = null;
+
+function getSpriteShader() { return mSpriteShader; }
+
 function createShader() {
     mConstColorShader = new SimpleShader(kSimpleVS, kSimpleFS);
     mTextureShader = new TextureShader(kTextureVS, kTextureFS);
+    mSpriteShader = new SpriteShader(kTextureVS, kTextureFS);
 }
 
 function init() {
@@ -46,10 +53,11 @@ function init() {
 function cleanUp() {
     mConstColorShader.cleanUp();
     mTextureShader.cleanUp();
+    mSpriteShader.cleanUp();
 
     text.unload(kSimpleVS);
     text.unload(kSimpleFS);
     text.unload(kTextureVS);
     text.unload(kTextureFS);
 }
-export { init, cleanUp, getConstColorShader, getTextureShader }
+export { init, cleanUp, getConstColorShader, getTextureShader, getSpriteShader }
