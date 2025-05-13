@@ -20,6 +20,8 @@ class MyGame extends engine.Scene {
         this.mCollector = null;
         this.mFontImage = null;
         this.mMinion = null;
+        this.mRightMinion = null;
+        this.mLeftMinion = null;
     }
 
 
@@ -60,6 +62,32 @@ class MyGame extends engine.Scene {
         this.mHero.getXform().setPosition(20, 60);
         this.mHero.getXform().setSize(2, 3);
         this.mHero.setElementPixelPositions(0, 120, 0, 180);
+
+        this.mRightMinion = new engine.SpriteAnimateRenderable(this.kMinionSprite);
+        this.mRightMinion.setColor([1, 1, 1, 0]);
+        this.mRightMinion.getXform().setPosition(26, 56.5);
+        this.mRightMinion.getXform().setSize(4, 3.2);
+        this.mRightMinion.setSpriteSequence(
+            512, 0,   // first element pixel positions: top: 512 left: 0
+            204, 164, // widthxheight in pixels
+            5,        // number of elements in this sequence
+            0         // horizontal padding in between
+        );
+        this.mRightMinion.setAnimationType(engine.eAnimationType.eRight);
+        this.mRightMinion.setAnimationSpeed(50);
+        // the left minion
+        this.mLeftMinion = new engine.SpriteAnimateRenderable(this.kMinionSprite);
+        this.mLeftMinion.setColor([1, 1, 1, 0]);
+        this.mLeftMinion.getXform().setPosition(15, 56.5);
+        this.mLeftMinion.getXform().setSize(4, 3.2);
+        this.mLeftMinion.setSpriteSequence(
+            348, 0,   // first element pixel positions: top: 164 left: 0
+            204, 164, // widthxheight in pixels
+            5,        // number of elements in this sequence
+            0,        // horizontal padding in between
+        );
+        this.mLeftMinion.setAnimationType(engine.eAnimationType.eRight);
+        this.mLeftMinion.setAnimationSpeed(50);
     }
 
     draw() {
@@ -70,11 +98,13 @@ class MyGame extends engine.Scene {
         this.mCamera.setViewAndCameraMatrix();
 
         // Draw
-        this.mPortal.draw(this.mCamera);
-        this.mCollector.draw(this.mCamera);
-        this.mHero.draw(this.mCamera);
-        this.mFontImage.draw(this.mCamera);
-        this.mMinion.draw(this.mCamera);
+        // this.mPortal.draw(this.mCamera);
+        // this.mCollector.draw(this.mCamera);
+        // this.mHero.draw(this.mCamera);
+        // this.mFontImage.draw(this.mCamera);
+        // this.mMinion.draw(this.mCamera);
+        this.mLeftMinion.draw(this.mCamera);
+        this.mRightMinion.draw(this.mCamera);
     }
 
     update() {
@@ -159,6 +189,38 @@ class MyGame extends engine.Scene {
         if (engine.input.isKeyPressed(engine.input.keys.Q))
             this.stop();
 
+        this.mRightMinion.updateAnimation();
+        this.mLeftMinion.updateAnimation();
+
+        // Animate left on the sprite sheet
+        if (engine.input.isKeyClicked(engine.input.keys.One)) {
+            this.mRightMinion.setAnimationType(engine.eAnimationType.eLeft);
+            this.mLeftMinion.setAnimationType(engine.eAnimationType.eLeft);
+        }
+
+        // Swing animation
+        if (engine.input.isKeyClicked(engine.input.keys.Two)) {
+            this.mRightMinion.setAnimationType(engine.eAnimationType.eSwing);
+            this.mLeftMinion.setAnimationType(engine.eAnimationType.eSwing);
+        }
+
+        // Animate right on the sprite sheet
+        if (engine.input.isKeyClicked(engine.input.keys.Three)) {
+            this.mRightMinion.setAnimationType(engine.eAnimationType.eRight);
+            this.mLeftMinion.setAnimationType(engine.eAnimationType.eRight);
+        }
+
+        // decrease duration of each sprite element to speed up animation
+        if (engine.input.isKeyClicked(engine.input.keys.Four)) {
+            this.mRightMinion.incAnimationSpeed(-2);
+            this.mLeftMinion.incAnimationSpeed(-2);
+        }
+
+        // increase duration of eaach sprite element to slow down animation
+        if (engine.input.isKeyClicked(engine.input.keys.Five)) {
+            this.mRightMinion.incAnimationSpeed(2);
+            this.mLeftMinion.incAnimationSpeed(2);
+        }
     }
 
     // next() {

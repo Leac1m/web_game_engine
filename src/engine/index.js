@@ -11,8 +11,10 @@ import * as audio from './resources/audio.js';
 import Renderable from './renderables/renderable.js';
 import TextureRenderable from './renderables/texture_renderable.js';
 import SpriteRenderable from './renderables/sprite_renderable.js';
+import SpriteAnimateRenderable from './renderables/sprite_animate_renderable.js';
 
 import { eTexCoordArrayIndex } from './renderables/sprite_renderable.js';
+import { eAnimationType } from './renderables/sprite_animate_renderable.js';
 
 import Scene from './scene.js';
 import Transform from './transform.js';
@@ -52,10 +54,11 @@ export {
     init, cleanUp, clearCanvas, 
     
     // Renderables
-    Renderable, TextureRenderable, SpriteRenderable,
+    Renderable, TextureRenderable,
+    SpriteRenderable, SpriteAnimateRenderable,
 
     // constants
-    eTexCoordArrayIndex,
+    eTexCoordArrayIndex, eAnimationType,
     
     // Util classes
     Transform, Camera, Scene }
