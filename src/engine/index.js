@@ -24,6 +24,10 @@ import Scene from './scene.js';
 import Transform from './transform.js';
 import Camera from './camera.js';
 
+// game objects
+import GameObject from './game_object/game_object.js';
+import GameObjectSet from './game_object/game_object_set.js';
+
 function init(htmlCanvasID) {
     glSys.init(htmlCanvasID);
     vertexBuffer.init();
@@ -67,4 +71,8 @@ export default {
     eTexCoordArrayIndex, eAnimationType,
     
     // Util classes
-    Transform, Camera, Scene }
+    Transform, Camera, Scene,
+
+    // Game Object
+    GameObject, GameObjectSet
+}
