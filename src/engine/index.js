@@ -7,11 +7,15 @@ import * as texture from './resources/texture.js';
 import * as text from './resources/text.js';
 import * as xml from './resources/xml.js';
 import * as audio from './resources/audio.js';
+import * as font from './resources/font.js';
+import * as defaultResources from './resources/default_resources.js';
+
 // renderables
 import Renderable from './renderables/renderable.js';
 import TextureRenderable from './renderables/texture_renderable.js';
 import SpriteRenderable from './renderables/sprite_renderable.js';
 import SpriteAnimateRenderable from './renderables/sprite_animate_renderable.js';
+import FontRenderable from './renderables/font_renderable.js';
 
 import { eTexCoordArrayIndex } from './renderables/sprite_renderable.js';
 import { eAnimationType } from './renderables/sprite_animate_renderable.js';
@@ -26,6 +30,7 @@ function init(htmlCanvasID) {
     shaderResources.init();
     input.init();
     audio.init();
+    defaultResources.init();
 }
 
 function clearCanvas(color) {
@@ -36,6 +41,7 @@ function clearCanvas(color) {
 
 function cleanUp() {
     loop.cleanUp();
+    shaderResources.cleanUp();
     audio.cleanUp();
     input.cleanUp();
     shaderResources.cleanUp();
@@ -43,9 +49,9 @@ function cleanUp() {
     glSys.cleanUp();
 }
 
-export { 
+export default { 
     // resource support
-    audio, text, xml, texture,
+    audio, text, xml, texture, font, defaultResources,
     
     // input support
     input, 
@@ -55,7 +61,7 @@ export {
     
     // Renderables
     Renderable, TextureRenderable,
-    SpriteRenderable, SpriteAnimateRenderable,
+    SpriteRenderable, SpriteAnimateRenderable, FontRenderable,
 
     // constants
     eTexCoordArrayIndex, eAnimationType,
