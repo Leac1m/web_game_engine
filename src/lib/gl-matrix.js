@@ -504,6 +504,15 @@ vec2.lerp = function (out, a, b, t) {
     return out;
 }
 
+vec2.rotate = function(out, a, c) {
+    var r = [];
+    r[0] = a[0] * Math.cos(c) - a[1] * Math.sin(c);
+    r[1] = a[0] * Math.sin(c) + a[1] * Math.cos(c);
+    out[0] = r[0];
+    out[1] = r[1];
+    return r;
+}
+
 /**
  * Generates a random vector with the given scale
  *
