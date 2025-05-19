@@ -1,4 +1,6 @@
 
+import BoundingBox from "../bounding_box.js";
+
 class GameObject {
     constructor(renderable) {
         this.mRenderComponent = renderable;
@@ -8,6 +10,12 @@ class GameObject {
     }
 
     getXform() { return this.mRenderComponent.getXform(); }
+    
+    getBBox() {
+        let xform = this.getXform();
+        let b = new BoundingBox(xform.getPosition(), xform.getWidth(), xform.getHeight());
+        return b;
+    }
 
     setVisibility(f) { this.mSpeed = s; }
     isVisible() { return this.mVisible; }

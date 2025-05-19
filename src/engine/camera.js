@@ -1,3 +1,4 @@
+import BoundingBox from "./bounding_box.js";
 import * as glSys from "./core/gl.js";
 
 class Camera {
@@ -70,6 +71,14 @@ class Camera {
     }
     
     getCameraMatrix() { return this.mCameraMatrix; }
+
+    collideWCBound(aXform, zone) {
+        let bbox = new BoundingBox(aXform.getPosition(), aXform.getWidth(), aXform.getHeight());
+        let w = zone * this.getWCWidth();
+        let h = zone * this.getWCHeight();
+        let cameraBound = new BoundingBox(this.getWCCenter(), w, h);
+        return cameraBound.boundCollideStatus(bbox);
+    }
 }
 
 const eViewport = Object.freeze({

@@ -106,6 +106,9 @@ class MyGame extends engine.Scene {
 
         this.mHero.update();
 
+        // get the bounding box for collision
+        let hBbox = this.mHero.getBBox();
+        let bBbox = this.mBrain.getBBox();
         switch (this.mMode) {
             case 'H':
                 this.mBrain.update(); // player steers with arrow keys
@@ -114,12 +117,14 @@ class MyGame extends engine.Scene {
                 rate = 0.02; // gradual rate
                 // In gradual mode, the following should also be executed
             case 'J':
-                this.mBrain.rotateObjPointTo(this.mHero.getXform().getPosition(), rate);
-
-                // the default GameObject: only move forward
-                engine.GameObject.prototype.update.call(this.mBrain);
+                if (!hBbox.intersectBound(bBbox)) {  // stop the brain when it touches hero bound
+                    this.mBrain.rotateObjPointTo(this.mHero.getXform().getPosition(), rate);
+                    engine.GameObject.prototype.update.call(this.mBrain);  // the default GameObject: only move forward
+                }
                 break;
         }
+
+        let status = this.mCamera.collideWCBound(this.mHero.getXform(), 0.8);
 
         if (engine.input.isKeyClicked(engine.input.keys.H)) {
             this.mMode = 'H';
@@ -133,7 +138,7 @@ class MyGame extends engine.Scene {
             this.mMode = 'J'
         }
 
-        this.mMsg.setText(msg + this.mMode);
+        this.mMsg.setText(msg + this.mMode + "[Hero bound=" + status + "]");
         // this.mMinionset.update();
         // this.mDyePack.update();
     }
