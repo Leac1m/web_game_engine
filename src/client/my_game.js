@@ -93,7 +93,7 @@ class MyGame extends engine.Scene {
         // this.mDyePack.draw(this.mCamera);
         this.mMsg.draw(this.mCamera);
 
-        this.mBrain.draw(this.mCamera);
+        // this.mBrain.draw(this.mCamera);
 
     }
 

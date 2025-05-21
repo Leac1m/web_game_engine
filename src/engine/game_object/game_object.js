@@ -1,3 +1,4 @@
+"use strict"
 
 import BoundingBox from "../bounding_box.js";
 
@@ -13,7 +14,11 @@ class GameObject {
     
     getBBox() {
         let xform = this.getXform();
-        let b = new BoundingBox(xform.getPosition(), xform.getWidth(), xform.getHeight());
+        let b = new BoundingBox(
+            xform.getPosition(),
+            xform.getWidth(),
+            xform.getHeight()
+        );
         return b;
     }
 

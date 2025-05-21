@@ -1,3 +1,4 @@
+"use strict"
 class BoundingBox {
     constructor(centerPos, w, h) {
         this.mLL = vec2.fromValues(0, 0);
@@ -7,20 +8,20 @@ class BoundingBox {
     setBounds(centerPos, w, h) {
         this.mWidth = w;
         this.mHeight = h;
-        this.mLL[0] = centerPos[0] - (w / 2)
+        this.mLL[0] = centerPos[0] - (w / 2);
         this.mLL[1] = centerPos[1] - (h / 2);
     }
 
     // if position (x, y) is within bounds of the box
     containsPoint(x, y) {
         return ((x > this.minX()) && (x < this.maxX()) && 
-            (y > this.minY()) && (y > this.minY() && (y < this.maxY())));
+            (y > this.minY()) && (y < this.maxY()));
     }
 
     // if given bound intersects with the current one
     intersectBound(otherBound) {
         return ((this.minX() < otherBound.maxX()) && 
-            (this.maxX() > otherBound.minY()) && 
+            (this.maxX() > otherBound.minX()) && 
             (this.minY() < otherBound.maxY()) &&
             (this.maxY() > otherBound.minY()));
     }
@@ -51,13 +52,15 @@ class BoundingBox {
                 status = eBoundCollideStatus.eInside;
             }
             return status;
+        } else {
+            return eBoundCollideStatus.eOutside;
         }
-    }
+    } 
 
     minX() { return this.mLL[0]; }
     maxX() { return this.mLL[0] + this.mWidth; }
     minY() { return this.mLL[1]; }
-    maxY() { return this.mLL + this.mHeight; }
+    maxY() { return this.mLL[1] + this.mHeight; }
 }
 
 
