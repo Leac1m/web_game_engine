@@ -22,7 +22,7 @@ class GameObject {
         return b;
     }
 
-    setVisibility(f) { this.mSpeed = s; }
+    setVisibility(f) { this.mVisible = f; }
     isVisible() { return this.mVisible; }
 
     setSpeed(s) { this.mSpeed = s; }
@@ -90,6 +90,25 @@ class GameObject {
         rad *= rate; // actual angle need to rotate from Obj's front
         vec2.rotate(this.getCurrentFrontDir(), this.getCurrentFrontDir(), rad);
         this.getXform().incRotationByRad(rad);
+    }
+
+    pixelTouches(otherObj, wcTouchPos) {
+        // only continue if both objects have getColorArray defined
+        // if defined, should have other texture intersection support
+        let pixelTouch = false;
+        let myRen = this.getRenderable();
+        let otherRen = otherObj.getRenderable();
+
+        if ((typeof myRen.pixelTouches === "function") &&
+            (typeof otherRen.pixelTouches === "function")) {
+            let otherBbox = otherObj.getBBox();
+            if (otherBbox.intersectBound(this.getBBox())) {
+                myRen.setColorArray();
+                otherRen.setColorArray();
+                pixelTouch = myRen.pixelTouches(otherRen, wcTouchPos);
+            }
+            return pixelTouch;
+            }
     }
 }
 

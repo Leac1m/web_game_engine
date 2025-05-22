@@ -5,42 +5,35 @@ import engine from "../engine/index.js";
 
 // user stuff
 import DyePack from './objects/dye_pack.js';
-import Minion from './objects/minion.js';
-import Hero from './objects/hero.js';
-import Brain from "./objects/brain.js";
-
+import TextureObject from "./objects/texture_object.js";
 
 class MyGame extends engine.Scene {
     constructor() {
         super();
         // textures: 
         this.kMinionSprite = "assets/minion_sprite.png";
+        this.kCollector = "assets/minion_collector.png"; // assets\minion_collector.png
+        this.kPortal = "assets/minion_portal.png";
 
         // The camera to view the scene
         this.mCamera = null;
 
-        // the hero and the support objects
-        this.mHero = null;
-        this.mMinion = null;
-        this.mBrain = null;
-
-        // mode of running:
-        // H: Player drive brain
-        // J: Dye drive brain, immediate orientation change
-        // K: Dye drive brain, gradual orientation change
-        this.mMode = 'H';
-
+        this.mMsg = null;
+        this.mCollector = null;
+        this.mPortal = null;
     }
 
     load() {
         // Step A: loads the textures    
         engine.texture.load(this.kMinionSprite);
-
+        engine.texture.load(this.kCollector);
+        engine.texture.load(this.kPortal);
     }
 
     unload() {
         engine.texture.unload(this.kMinionSprite);
-
+        engine.texture.unload(this.kCollector);
+        engine.texture.unload(this.kPortal);
     }
 
     init() {
@@ -54,24 +47,15 @@ class MyGame extends engine.Scene {
         // sets the background to gray
 
         // Step B: The dye pack: simply another GameObject
-        // this.mDyePack = new DyePack(this.kMinionSprite);
+        this.mDyePack = new DyePack(this.kMinionSprite);
+        this.mDyePack.setVisibility(false);
 
-        // Step C: A set of Minions
-        // this.mMinionset = new engine.GameObjectSet();
-        // let i = 0, randomY, aMinion;
-        // // create 5 mininons at random Y values
-        // for (i = 0; i < 5; i++) {
-        //     randomY = Math.random() * 65;
 
-        //     aMinion = new Minion(this.kMinionSprite);
-        //     this.mMinionset.addToSet(aMinion);
-        // }
+        this.mCollector = new TextureObject(this.kCollector, 50, 30, 30, 30);
+        this.mPortal = new TextureObject(this.kPortal, 70, 30, 10, 10);
 
-        // Step D:incRotationByDegree Create the hero object
-        this.mHero = new Hero(this.kMinionSprite);
-        this.mBrain = new Brain(this.kMinionSprite);
 
-        // Step E: Create and initialize message output
+        // Create and initialize message output
         this.mMsg = new engine.FontRenderable("Status Message");
         this.mMsg.setColor([0, 0, 0, 1]);
         this.mMsg.getXform().setPosition(1, 2);
@@ -88,59 +72,43 @@ class MyGame extends engine.Scene {
         this.mCamera.setViewAndCameraMatrix();
         
         // Step  C: Draw everything
-        this.mHero.draw(this.mCamera);
-        // this.mMinionset.draw(this.mCamera);
-        // this.mDyePack.draw(this.mCamera);
+        this.mCollector.draw(this.mCamera);
+        this.mPortal.draw(this.mCamera);
+        this.mDyePack.draw(this.mCamera);
         this.mMsg.draw(this.mCamera);
-
-        // this.mBrain.draw(this.mCamera);
-
     }
 
     // The 
     //  function, updates the application state. Make sure to _NOT_ draw
     // anything from this function!
     update() {
-        let msg = "Brain [H:key J:imm K:gradual]: ";
-        let rate = 1;
+        let msg = "No Collision";
 
-        this.mHero.update();
+        this.mCollector.update(
+            engine.input.keys.W,
+            engine.input.keys.S,
+            engine.input.keys.A,
+            engine.input.keys.D
+        );
 
-        // get the bounding box for collision
-        let hBbox = this.mHero.getBBox();
-        let bBbox = this.mBrain.getBBox();
-        switch (this.mMode) {
-            case 'H':
-                this.mBrain.update(); // player steers with arrow keys
-                break;
-            case 'K':
-                rate = 0.02; // gradual rate
-                // In gradual mode, the following should also be executed
-            case 'J':
-                if (!hBbox.intersectBound(bBbox)) {  // stop the brain when it touches hero bound
-                    this.mBrain.rotateObjPointTo(this.mHero.getXform().getPosition(), rate);
-                    engine.GameObject.prototype.update.call(this.mBrain);  // the default GameObject: only move forward
-                }
-                break;
+        this.mPortal.update(
+            engine.input.keys.Up,
+            engine.input.keys.Down,
+            engine.input.keys.Left,
+            engine.input.keys.Right
+        );
+
+        let h = [];
+
+        if (this.mPortal.pixelTouches(this.mCollector, h)) {
+            msg = "Collided!: (" + h[0].toPrecision(4) + " " + h[1].toPrecision(4) + ")";
+            this.mDyePack.setVisibility(true);
+            this.mDyePack.getXform().setXPos(h[0]);
+            this.mDyePack.getXform().setYPos(h[1]);
+        } else {
+            this.mDyePack.setVisibility(false);
         }
-
-        let status = this.mCamera.collideWCBound(this.mHero.getXform(), 0.8);
-
-        if (engine.input.isKeyClicked(engine.input.keys.H)) {
-            this.mMode = 'H';
-        }
-
-        if (engine.input.isKeyClicked(engine.input.keys.K)) {
-            this.mMode = 'K';
-        }
-
-        if (engine.input.isKeyClicked(engine.input.keys.J)) {
-            this.mMode = 'J'
-        }
-
-        this.mMsg.setText(msg + this.mMode + "[Hero bound=" + status + "]");
-        // this.mMinionset.update();
-        // this.mDyePack.update();
+        this.mMsg.setText(msg);
     }
 }
 

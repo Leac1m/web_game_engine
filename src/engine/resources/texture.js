@@ -9,6 +9,7 @@ class TextureInfo {
         this.mWidth = w;
         this.mHeight = h;
         this.mGLTexID = id;
+        this.mColorArray = null;
     }
 }
 
@@ -98,4 +99,41 @@ function deactivate() {
     gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
-export { has, get, load, unload, TextureInfo, activate, deactivate}
+function getColorArray(textureName) {
+    let gl = glSys.get();
+    let texInfo = get(textureName);
+    
+    if (texInfo.mColorArray === null) {
+        // create framebuffer bind to texture and read the color content
+        let fb = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+        gl.framebufferTexture2D(
+            gl.FRAMEBUFFER,
+            gl.COLOR_ATTACHMENT0,
+            gl.TEXTURE_2D,
+            texInfo.mGLTexID,
+            0,
+        );
+
+        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE) {
+            let pixels = new Uint8Array(texInfo.mWidth * texInfo.mHeight * 4);
+            gl.readPixels(
+                0, 0,
+                texInfo.mWidth,
+                texInfo.mHeight,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                pixels
+            );
+            texInfo.mColorArray = pixels;
+        } else {
+            throw new Error("...");
+            return null;
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.deleteFramebuffer(fb);
+    }
+    return texInfo.mColorArray;
+}
+export { has, get, load, unload, TextureInfo, activate, deactivate, getColorArray }
